@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volume Wheel</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border: 5px solid black;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .wheel .slice {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      background-color: transparent;
+      border-top: 3px solid black;
+      transform-origin: 100% 100%;
+    }
+
+    .wheel .slice:nth-child(1) { transform: rotate(0deg); }
+    .wheel .slice:nth-child(2) { transform: rotate(45deg); }
+    .wheel .slice:nth-child(3) { transform: rotate(90deg); }
+    .wheel .slice:nth-child(4) { transform: rotate(135deg); }
+    .wheel .slice:nth-child(5) { transform: rotate(180deg); }
+    .wheel .slice:nth-child(6) { transform: rotate(225deg); }
+    .wheel .slice:nth-child(7) { transform: rotate(270deg); }
+    .wheel .slice:nth-child(8) { transform: rotate(315deg); }
+
+    .wheel .center {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: black;
+      border-radius: 50%;
+    }
+
+    .pointer {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 20px solid black;
+    }
+
+    .spin-btn {
+      position: absolute;
+      bottom: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="pointer"></div>
+    <div class="wheel">
+      <div class="slice" data-value="0%"></div>
+      <div class="slice" data-value="20%"></div>
+      <div class="slice" data-value="30%"></div>
+      <div class="slice" data-value="40%"></div>
+      <div class="slice" data-value="50%"></div>
+      <div class="slice" data-value="60%"></div>
+      <div class="slice" data-value="70%"></div>
+      <div class="slice" data-value="80%"></div>
+      <div class="center"></div>
+    </div>
+    <button class="spin-btn">SPIN!</button>
+  </div>
+
+  <script>
+    const wheel = document.querySelector('.wheel');
+    const pointer = document.querySelector('.pointer');
+    const spinBtn = document.querySelector('.spin-btn');
+    
+    let currentRotation = 0;
+
+    spinBtn.addEventListener('click', () => {
+      const randomSpin = Math.floor(Math.random() * 360) + 360; // Minimum 360° rotation
+      currentRotation += randomSpin;
+      wheel.style.transition = 'transform 2s ease-out';
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      // Calculate the resulting slice
+      setTimeout(() => {
+        const normalizedRotation = currentRotation % 360;
+        const sliceIndex = Math.floor(normalizedRotation / 45); // 360°/8 slices
+        const selectedSlice = wheel.querySelector(`.slice:nth-child(${sliceIndex + 1})`);
+        alert(`Selected Volume: ${selectedSlice.dataset.value}`);
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
